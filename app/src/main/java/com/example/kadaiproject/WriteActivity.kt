@@ -14,19 +14,24 @@ class WriteActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        bindingW = ActivityWriteBinding.inflate(layoutInflater).apply{
-            setContentView(this.root)}
-
-        val writeIntent: Intent = Intent(this,MainActivity::class.java)
-        val editor = prefW.edit()
-        var writtenNote = bindingW.writtenText.text.toString()
-
-    bindingW.doneFloatingButton.setOnClickListener{
-
-        editor.putString("notes",writtenNote)
-        editor.apply()
-        startActivity(writeIntent)
+        bindingW = ActivityWriteBinding.inflate(layoutInflater).apply {
+            setContentView(this.root)
         }
 
+        // TODO: SharedPreferences を初期化する
+        prefW = getSharedPreferences("SharedPref", Context.MODE_PRIVATE)
+
+        val writeIntent: Intent = Intent(this, MainActivity::class.java)
+        val editor = prefW.edit()
+
+        // FIXME: onCreate で EditText の text を取得すると、その時点で表示されていた内容が取得されてしまう
+        var writtenNote = bindingW.writtenText.text.toString()
+
+        bindingW.doneFloatingButton.setOnClickListener {
+
+            editor.putString("notes", writtenNote)
+            editor.apply()
+            startActivity(writeIntent)
+        }
     }
 }
